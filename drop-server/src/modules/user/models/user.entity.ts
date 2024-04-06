@@ -37,4 +37,10 @@ export class User {
     nullable: true,
   })
   account: string;
+
+  @Column({
+    comment: '头像',
+    nullable: true,
+  })
+  avatar: string;
 }
