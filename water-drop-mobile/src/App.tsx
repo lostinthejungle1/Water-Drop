@@ -1,6 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Button, Form, Input } from 'antd-mobile';
+import {
+  Button, Form, Input, ImageUploader,
+} from 'antd-mobile';
 import { FIND, UPDATE } from './graphql/demo';
+import { useUploadOSS } from './hooks/useUploadOSS';
+import styles from './App.module.less';
 
 const App = () => {
   const { loading, data } = useQuery(FIND, {
@@ -23,8 +27,13 @@ const App = () => {
       },
     });
   };
+
+  const uploadHandler = useUploadOSS();
+  const onClickHandler = (v:any) => {
+    console.log('onclick', v);
+  };
   return (
-    <div>
+    <div className={styles.container}>
       <p>
         data:
         {JSON.stringify(data)}
@@ -44,6 +53,23 @@ const App = () => {
       >
         <Form.Item name="name" label="name">
           <Input />
+        </Form.Item>
+      </Form>
+      <Form
+        layout="horizontal"
+        onFinish={onClickHandler}
+        footer={(
+          <Button block type="submit" color="primary" size="large">
+            提交
+          </Button>
+      )}
+      >
+        <Form.Item
+          name="actor"
+          label="头像"
+          className={styles.avatar}
+        >
+          <ImageUploader upload={uploadHandler} />
         </Form.Item>
       </Form>
     </div>
