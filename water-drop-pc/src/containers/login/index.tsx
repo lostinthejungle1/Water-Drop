@@ -18,8 +18,14 @@ import {
   import type { CSSProperties } from 'react';
   import { useState } from 'react';
   import styles from './index.module.less';
+import { useMutation } from '@apollo/client';
+import { loginByCode, sendCodeMsg } from '../../graphql/auth';
   
   type LoginType = 'phone' | 'account';
+  interface IValue{
+    tel: string;
+    code: string;
+  }
   
   export const Login = () => {
     const { token } = theme.useToken();
@@ -32,6 +38,22 @@ import {
       verticalAlign: 'middle',
       cursor: 'pointer',
     };
+    const [run] = useMutation(sendCodeMsg);
+    const [runLoginByCode] = useMutation(loginByCode);
+    const login = async ({tel,code}:IValue)=>{
+      const res = await runLoginByCode({
+        variables:{
+            tel,
+            code,
+          }
+      });
+      // console.log(res);
+      if(res.data.loginByCode === 'true'){
+        message.success('登陆成功！');
+      }else{
+        message.error('登陆失败！');
+      }
+    }
   
     return (
       <ProConfigProvider hashed={false}>
@@ -41,6 +63,7 @@ import {
             http://water-drop-assest-1999.oss-ap-southeast-3.aliyuncs.com/images/1713261485988.jpg"
             title="Waterdrop"
             subTitle="好好学习，天天向上"
+            onFinish={login}
           >
             <Tabs
               centered
@@ -120,7 +143,7 @@ import {
                     size: 'large',
                     prefix: <MobileOutlined className={'prefixIcon'} />,
                   }}
-                  name="mobile"
+                  name="tel"
                   placeholder={'手机号'}
                   rules={[
                     {
@@ -148,15 +171,27 @@ import {
                     }
                     return '获取验证码';
                   }}
-                  name="captcha"
+                  phoneName='mobile'
+                  name="code"
                   rules={[
                     {
                       required: true,
                       message: '请输入验证码！',
                     },
                   ]}
-                  onGetCaptcha={async () => {
-                    message.success('获取验证码成功！验证码为：1234');
+                  onGetCaptcha={async (tel: string) => {
+                    // console.log(tel);
+                    const res = await run({
+                        variables:{
+                            tel:'17356535701'
+                        }
+                    })
+                    if(res.data.sendCodeMsg==='true'){
+                      message.success('获取验证码成功!');
+                    }else{
+                      message.error('获取验证码失败');
+                    }
+                    // console.log('res of sendCodeMsg',res);
                   }}
                 />
               </>
