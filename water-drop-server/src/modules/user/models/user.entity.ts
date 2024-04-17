@@ -8,7 +8,7 @@ export class User {
 
   @Column({
     comment: 'nickname',
-    default: '',
+    default: 'defaultName',
   })
   @IsNotEmpty()
   name: string;
@@ -43,4 +43,16 @@ export class User {
     nullable: true,
   })
   avatar: string;
+
+  @Column({
+    comment: '验证码',
+    nullable: true,
+  })
+  code: string;
+
+  @Column({
+    comment: '验证码生成时间',
+    nullable: true,
+  })
+  codeCreatedAt: Date;
 }
