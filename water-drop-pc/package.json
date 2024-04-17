@@ -12,7 +12,11 @@
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
     "@ant-design/pro-components": "^2.7.0",
+    "@apollo/client": "^3.9.11",
     "antd": "^5.16.2",
+    "classnames": "^2.5.1",
+    "dayjs": "^1.11.10",
+    "graphql": "^16.8.1",
     "less": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
